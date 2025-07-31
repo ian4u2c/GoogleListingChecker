@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Listing Analyzer</title>
+  <script>
+    function analyzeListing() {
+      const listingUrl = document.getElementById("listingUrl").value;
+
+      // Attempt to extract business name and address from the URL (if structured)
+      // Realistically you'd use the Google Places API for precision.
+      const queryParams = new URLSearchParams(new URL(listingUrl).search);
+      const businessName = queryParams.get("q") || "Business";
+      let address = listingUrl.split("/place/")[1]?.split("/")[0] || "";
+      address = decodeURIComponent(address.replace(/\+/g, " ")).split(" ")[0];
+
+      const keyword = prompt("Enter the main keyword for this business (e.g. 'pizza', 'lawyer', etc.):");
+      if (!keyword) return alert("Please enter a keyword to continue.");
+
+      const mapsSearchUrl = `https://www.google.com/maps/search/${encodeURIComponent(keyword)}+near+${encodeURIComponent(address)}`;
+      const mapsAddressUrl = `https://www.google.com/maps/search/${encodeURIComponent(address)}`;
+
+      window.open(mapsSearchUrl, "_blank");
+      window.open(mapsAddressUrl, "_blank");
+    }
+  </script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans text-center">
+  <h1 class="text-2xl font-bold mt-10">Google Listing Analyzer</h1>
+  <p class="mt-2">Paste a Google Business Listing URL below and hit "Analyze"</p>
+
+  <input id="listingUrl" type="text" placeholder="Paste Google listing link here..." style="width: 80%; margin: 20px auto; padding: 10px; font-size: 1rem;" />
+  <br />
+  <button onclick="analyzeListing()" style="padding: 10px 20px; font-size: 1rem; background-color: #34d399; border: none; color: white; border-radius: 5px; cursor: pointer;">Analyze</button>
+
+  <p style="margin-top: 40px; font-size: 0.9rem; color: gray;">Note: This tool opens two Google Maps searches: one for the business address, and one for the main keyword in that area. For full keyword audits, please use keyword planning tools.</p>
+</body>
+</html>
+
